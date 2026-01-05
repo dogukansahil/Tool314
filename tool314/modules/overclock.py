@@ -6,14 +6,37 @@ from tool314.core.config_mgr import ConfigManager
 class Overclock:
     @staticmethod
     def show_menu():
-        menu = Menu("Overclocking Settings")
+        menu = Menu("Overclocking Settings", info_text=Overclock.get_status)
         print("\nWARNING: Overclocking may void your warranty and cause instability.")
-        print("Ensure you have adequate cooling (Fan Control recommended)!\n")
         
         menu.add_option("Set Medium Overclock (arm_freq=1800)", lambda: Overclock.apply_preset("medium"))
         menu.add_option("Set High Overclock (arm_freq=2000)", lambda: Overclock.apply_preset("high"))
         menu.add_option("Remove Overclock (Stock)", lambda: Overclock.apply_preset("none"))
         menu.display()
+
+    @staticmethod
+    def get_status():
+        config_path = fan_module.CONFIG_PATH
+        if not os.path.exists(config_path):
+            return "Current Status: Unknown (Config file not found)"
+        
+        try:
+            with open(config_path, "r") as f:
+                content = f.read()
+            
+            if "arm_freq" in content:
+                import re
+                freq = re.search(r"arm_freq=(\d+)", content)
+                volt = re.search(r"over_voltage=(\d+)", content)
+                
+                f_val = freq.group(1) if freq else "?"
+                v_val = volt.group(1) if volt else "?"
+                
+                return f"Current Status: Overclocked (Freq: {f_val}, Voltage: {v_val})"
+            else:
+                return "Current Status: Stock (No overrides found)"
+        except Exception:
+            return "Current Status: Error reading config"
 
     @staticmethod
     def apply_preset(preset):

@@ -7,11 +7,40 @@ RESOLV_CONF_PATH = os.getenv("TOOL314_RESOLV_PATH", "/etc/resolv.conf")
 class DnsConfig:
     @staticmethod
     def show_menu():
-        menu = Menu("DNS Configuration")
+        menu = Menu("DNS Configuration", info_text=DnsConfig.get_status)
         menu.add_option("Set Google DNS (8.8.8.8, 8.8.4.4)", lambda: DnsConfig.apply_dns(["8.8.8.8", "8.8.4.4"]))
         menu.add_option("Set Cloudflare DNS (1.1.1.1, 1.0.0.1)", lambda: DnsConfig.apply_dns(["1.1.1.1", "1.0.0.1"]))
         menu.add_option("Set OpenDNS (208.67.222.222, 208.67.220.220)", lambda: DnsConfig.apply_dns(["208.67.222.222", "208.67.220.220"]))
         menu.display()
+
+    @staticmethod
+    def get_status():
+        # Handle mock path logic duplication if needed, but for reading we just check the var
+        # Ideally the mock logic should be in a central place or init, but keeping it simple for now.
+        path = RESOLV_CONF_PATH
+        if os.name == 'nt' and not os.path.exists(path) and os.path.exists("resolv.conf"):
+            path = "resolv.conf"
+
+        if not os.path.exists(path):
+            return "Current DNS: Unknown (File not found)"
+        
+        try:
+            with open(path, "r") as f:
+                lines = f.readlines()
+            
+            nameservers = []
+            for line in lines:
+                if line.strip().startswith("nameserver"):
+                    parts = line.split()
+                    if len(parts) > 1:
+                        nameservers.append(parts[1])
+            
+            if nameservers:
+                return f"Current DNS: {', '.join(nameservers)}"
+            else:
+                return "Current DNS: None configured (or auto/DHCP)"
+        except Exception:
+            return "Current DNS: Error reading file"
 
     @staticmethod
     def apply_dns(servers):

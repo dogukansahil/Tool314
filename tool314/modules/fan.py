@@ -8,11 +8,37 @@ CONFIG_PATH = os.getenv("TOOL314_CONFIG_PATH", "/boot/config.txt")
 class FanControl:
     @staticmethod
     def show_menu():
-        menu = Menu("Fan Control")
+        menu = Menu("Fan Control", info_text=FanControl.get_status)
         menu.add_option("Enable Fan (GPIO 14, 80C)", FanControl.enable_default)
         menu.add_option("Set Custom Fan Settings", FanControl.set_custom)
         menu.add_option("Disable Fan", FanControl.disable)
         menu.display()
+
+    @staticmethod
+    def get_status():
+        if not os.path.exists(CONFIG_PATH):
+            return "Current Status: Unknown (Config file not found)"
+        
+        try:
+            with open(CONFIG_PATH, "r") as f:
+                content = f.read()
+            
+            # Simple check for the dtoverlay line
+            # This logic is basic, ideally regex or robust parsing
+            if "dtoverlay=gpio-fan" in content:
+                # Try to extract details
+                import re
+                match = re.search(r"dtoverlay=gpio-fan,gpiopin=(\d+),temp=(\d+)", content)
+                if match:
+                    pin = match.group(1)
+                    temp = int(match.group(2)) // 1000
+                    return f"Current Status: ENABLED (GPIO {pin}, {temp}C)"
+                else:
+                    return "Current Status: PARTIALLY ENABLED (Generic setting found)"
+            else:
+                return "Current Status: DISABLED"
+        except Exception as e:
+            return f"Current Status: Error reading config ({str(e)})"
 
     @staticmethod
     def enable_default():

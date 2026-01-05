@@ -1,9 +1,10 @@
 import os
 
 class Menu:
-    def __init__(self, title="Tool314"):
+    def __init__(self, title="Tool314", info_text=None):
         self.title = title
         self.options = []
+        self.info_text = info_text  # Can be a string or a callable
 
     def add_option(self, label, callback):
         self.options.append({'label': label, 'callback': callback})
@@ -16,6 +17,14 @@ class Menu:
             self.clear_screen()
             print(f"=== {self.title} ===")
             print("-" * len(f"=== {self.title} ==="))
+            
+            # Display info/status if provided
+            if self.info_text:
+                if callable(self.info_text):
+                    print(self.info_text())
+                else:
+                    print(self.info_text)
+                print("-" * len(f"=== {self.title} ==="))
             
             for index, option in enumerate(self.options, start=1):
                 print(f"{index}. {option['label']}")

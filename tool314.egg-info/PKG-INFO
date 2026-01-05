@@ -1,0 +1,11 @@
+Metadata-Version: 2.1
+Name: tool314
+Version: 0.1.0
+Summary: A lightweight utility for Raspberry Pi system management (Fan, OC, DNS).
+Author: Doğukan Sahil
+Author-email: hi@dogukansahil.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: POSIX :: Linux
+Requires-Python: >=3.6
+License-File: LICENSE

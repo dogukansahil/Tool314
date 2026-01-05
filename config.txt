@@ -1,0 +1,3 @@
+# Mock config.txt
+arm_freq=1800
+over_voltage=2

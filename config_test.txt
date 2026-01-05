@@ -1,0 +1,3 @@
+# Mock config_test.txt
+
+dtoverlay=gpio-fan,gpiopin=14,temp=80000

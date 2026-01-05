@@ -1,0 +1,2 @@
+[console_scripts]
+tool314 = tool314.cli:main

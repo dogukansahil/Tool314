@@ -12,7 +12,7 @@ Modification and redistribution are permitted under the terms of the license.
 
 ## Attribution & Ownership
 Tool314 is developed and maintained by **Doğukan Sahil**.
-For questions, feedback, or commercial inquiries: **hi@dogukansahil.com**
+For questions, feedback, or commercial inquiries: **dogukansahil@protonmail.com** & **hi@dogukansahil.com**  
 
 Any redistribution must retain the original copyright and NOTICE.
 The Tool314 name and identity are not granted for use as a trademark.
